@@ -1,0 +1,21 @@
+project_name = "halifaxfoodie"
+aws_region   = "us-east-1"
+environment  = "production"
+
+# Lambda Configuration
+lambda_timeout       = 30
+lambda_memory        = 256
+lambda_runtime_nodejs = "nodejs18.x"
+lambda_runtime_python = "python3.9"
+
+# Optional: Enable CloudFront for CDN
+enable_cloudfront = false
+
+# Optional: Custom domain name
+# domain_name = "halifaxfoodie.com"
+
+# Additional tags
+tags = {
+  Team = "Group8"
+  Course = "CSCI5410"
+}

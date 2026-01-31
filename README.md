@@ -1,70 +1,218 @@
-# Getting Started with Create React App
+# Halifax Foodie 🍽️
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive cloud-based food review and restaurant management platform built with serverless architecture. Halifax Foodie enables users to discover restaurants, share reviews, get personalized recommendations using machine learning, and interact with an intelligent chatbot assistant.
 
-## Available Scripts
+## 📋 Table of Contents
 
-In the project directory, you can run:
+- [Features](#features)
+- [Architecture](#architecture)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Infrastructure](#infrastructure)
+- [Services Overview](#services-overview)
+- [Contributing](#contributing)
+- [License](#license)
 
-### `npm start`
+## ✨ Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **User Authentication**: Secure registration and login system
+- **Restaurant Reviews**: Browse and submit restaurant reviews
+- **Word Cloud Visualization**: AI-powered entity extraction and visualization from reviews
+- **Machine Learning Recommendations**: Cosine similarity-based recipe/restaurant recommendations
+- **Intelligent Chatbot**: AWS Lex-powered virtual assistant for navigation and order status
+- **Real-time Chat**: Google Cloud Pub/Sub-based messaging system
+- **Data Insights**: Analytics and visualization of user feedback
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🏗️ Architecture
 
-### `npm test`
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         Frontend (React)                            │
+│                      Hosted on AWS S3/CloudFront                    │
+└────────────┬──────────────────────────────────────────┬─────────────┘
+             │                                           │
+             ├───────────────┬──────────────┬───────────┤
+             ▼               ▼              ▼           ▼
+    ┌────────────────┐ ┌──────────┐ ┌─────────┐ ┌─────────────┐
+    │  API Gateway   │ │ AWS Lex  │ │   GCP   │ │   AWS S3    │
+    │                │ │ Chatbot  │ │ Pub/Sub │ │   Bucket    │
+    └───────┬────────┘ └────┬─────┘ └────┬────┘ └──────┬──────┘
+            │               │            │             │
+    ┌───────┴────────────────────────────┴─────────────┴──────────┐
+    │                    AWS Lambda Functions                      │
+    ├──────────────────────────────────────────────────────────────┤
+    │ • Authentication        • Data Processing (WordCloud)        │
+    │ • Machine Learning      • Virtual Assistance                 │
+    │ • Online Chat (Get/Publish Messages)                         │
+    └──────────────────┬─────────────────────────────────┬─────────┘
+                       │                                 │
+            ┌──────────┴────────────┐        ┌──────────┴────────────┐
+            │   DynamoDB Tables     │        │  AWS Comprehend       │
+            ├───────────────────────┤        │  (NLP Service)        │
+            │ • user                │        └───────────────────────┘
+            │ • Ratings             │
+            │ • recipes             │
+            │ • orders              │
+            └───────────────────────┘
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Technology Stack
 
-### `npm run build`
+### Frontend
+- **Framework**: React 17
+- **UI Libraries**: Material-UI, Bulma
+- **State Management**: React Router DOM
+- **API Integration**: Axios, AWS SDK
+- **Chatbot**: React-Lex
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Backend
+- **Serverless**: AWS Lambda, Google Cloud Functions
+- **API**: Express.js with Serverless HTTP
+- **Database**: AWS DynamoDB
+- **Storage**: AWS S3
+- **Messaging**: Google Cloud Pub/Sub
+- **AI/ML**: AWS Lex, AWS Comprehend
+- **Languages**: Node.js (JavaScript), Python 3.9+
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Infrastructure
+- **IaC**: Terraform
+- **Cloud Providers**: AWS, Google Cloud Platform
+- **CI/CD**: (Ready for GitHub Actions integration)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 📁 Project Structure
 
-### `npm run eject`
+```
+HalifaxFoodie/
+├── frontend/                          # React frontend application
+│   ├── src/
+│   │   ├── component/
+│   │   │   ├── Authentication/        # Login and Registration
+│   │   │   ├── Chat/                  # Real-time chat interface
+│   │   │   ├── Chatbot/               # AWS Lex chatbot integration
+│   │   │   ├── homepage/              # Main dashboard
+│   │   │   ├── MachineLearning/       # ML recommendations UI
+│   │   │   ├── Visualization/         # Data insights and analytics
+│   │   │   └── WordCloud/             # Word cloud visualization
+│   │   └── App.js                     # Main application component
+│   └── package.json
+│
+├── backend/                           # Serverless backend services
+│   ├── Authentication/                # User management Lambda
+│   ├── DataProcessing/                # Word cloud generation
+│   ├── MachineLearning/               # Cosine similarity engine
+│   ├── Online Chat/                   # Pub/Sub messaging
+│   │   ├── getmessages/
+│   │   └── publishmsg/
+│   └── Virtual Assistance/            # AWS Lex Lambda fulfillment
+│
+└── terraform/                         # Infrastructure as Code
+    ├── main.tf
+    ├── variables.tf
+    ├── outputs.tf
+    ├── lambda.tf
+    ├── dynamodb.tf
+    ├── s3.tf
+    └── api-gateway.tf
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 🚀 Getting Started
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Prerequisites
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Node.js 14+ and npm
+- Python 3.9+
+- AWS Account with configured credentials
+- Google Cloud Account (for Pub/Sub)
+- Terraform 1.0+
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Frontend Setup
 
-## Learn More
+```bash
+cd frontend
+npm install
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The application will run on `http://localhost:3000`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Backend Setup
 
-### Code Splitting
+Each Lambda function can be deployed individually or using Terraform (recommended).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#### Manual Lambda Deployment
 
-### Analyzing the Bundle Size
+```bash
+# Authentication Service
+cd backend/Authentication
+npm install
+zip -r function.zip .
+aws lambda update-function-code --function-name user-management --zip-file fileb://function.zip
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# Data Processing
+cd backend/DataProcessing
+pip install -r requirements.txt -t .
+zip -r function.zip .
+aws lambda update-function-code --function-name wordcloud-generator --zip-file fileb://function.zip
+```
 
-### Making a Progressive Web App
+### Infrastructure Deployment (Recommended)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+cd terraform
+terraform init
+terraform plan
+terraform apply
+```
 
-### Advanced Configuration
+See [terraform/README.md](terraform/README.md) for detailed infrastructure documentation.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🔧 Infrastructure
 
-### Deployment
+The project uses Terraform to manage cloud infrastructure across AWS and GCP:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **AWS Lambda Functions**: Serverless compute for all backend services
+- **API Gateway**: RESTful API endpoints
+- **DynamoDB**: NoSQL database for user data, ratings, recipes, and orders
+- **S3 Buckets**: Static website hosting and file storage
+- **CloudFront**: CDN for frontend distribution
+- **AWS Lex**: Conversational AI chatbot
+- **AWS Comprehend**: Natural language processing for entity extraction
+- **IAM Roles & Policies**: Secure access management
+- **Google Cloud Pub/Sub**: Real-time messaging infrastructure
 
-### `npm run build` fails to minify
+## 📦 Services Overview
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Authentication Service
+- User registration and login
+- Password validation
+- Session management
+- DynamoDB user table integration
+
+### Data Processing Service
+- Scans restaurant ratings and comments
+- Extracts entities using AWS Comprehend
+- Generates word cloud visualizations
+- Stores images in S3 bucket
+
+### Machine Learning Service
+- Cosine similarity algorithm for recipe matching
+- Automated recipe categorization
+- S3-triggered processing pipeline
+- DynamoDB recipe classification
+
+### Virtual Assistance Service
+- AWS Lex chatbot integration
+- Order status tracking
+- Navigation help
+- Food ordering guidance
+
+### Online Chat Service
+- Google Cloud Pub/Sub messaging
+- Real-time message retrieval
+- Subscription-based message handling
+- Customer-restaurant communication
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
